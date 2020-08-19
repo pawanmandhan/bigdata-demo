@@ -1,12 +1,14 @@
 package com.demo;
 
-import com.demo.constant.FileLocationConstants;
+import static com.demo.constant.FileLocationConstants.INPUT_DIRECTORY_PATH;
+import com.demo.util.cron.StagingToLevel1DataLoadJobScheduler;
 import com.demo.watcher.FileWatcher;
 
 public class DataAggregationClient {
 
 	public static void main(String[] args) throws Exception {
-		FileWatcher.watchForFiles(FileLocationConstants.INPUT_DIRECTORY_PATH);
+		StagingToLevel1DataLoadJobScheduler.startScheduling();
+		FileWatcher.watchForFiles(INPUT_DIRECTORY_PATH);
 	}
 
 }
