@@ -10,7 +10,7 @@ public class HiveUtils {
 
 	public static void loadLocalFileToStagingTable(String fileName) throws ClassNotFoundException, SQLException {
 		String LOAD_DATA_QUERY = QueryUtil.getLoadLocalFileToStagingQuery(fileName, STAGING_TABLE_NAME);
-		System.out.println("partition sql to be executed : " + LOAD_DATA_QUERY);
+		System.out.println("sql to be executed : " + LOAD_DATA_QUERY);
 		HiveConnectionUtil.getConnection().createStatement().execute(LOAD_DATA_QUERY);
 		System.out.println("Loaded data into the table successfully");
 	}

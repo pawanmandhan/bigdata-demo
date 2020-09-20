@@ -14,8 +14,8 @@ public class StagingToLevel1DataLoadJob implements Job {
 
 	public void execute(JobExecutionContext context) throws JobExecutionException {
 
-		long partitionName = new Date().getTime() / 1000L;
-		String STAGING_DATALOAD_QUERY = extracted(partitionName);
+		//long partitionName = new Date().getTime() / 1000L;
+		String STAGING_DATALOAD_QUERY = extracted();
 		System.out.println("Query : " + STAGING_DATALOAD_QUERY);
 		try {
 			HiveConnectionUtil.getConnection().createStatement().execute(STAGING_DATALOAD_QUERY);
@@ -25,9 +25,8 @@ public class StagingToLevel1DataLoadJob implements Job {
 
 	}
 
-	private String extracted(long partitionName) {
-		return "INSERT TABLE " + LEVEL1_TABLE + " PARTITION(loadTime='" + partitionName
-				+ "') SELECT id,load_time,mobile_no FROM staging_table WHERE loadTime='" + 1 + "'";
+	private String extracted() {
+		return "INSERT TABLE " + LEVEL1_TABLE + " PARTITION(partition_val=partLevel4(load_time)) SELECT id,load_time,mobile_no FROM staging_table";
 	}
 
 }

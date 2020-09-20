@@ -1,27 +1,26 @@
 package com.demo;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
-import java.util.Date;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
 
 public class Test {
 
 	public static void main(String[] args) {
-		LocalDateTime date = LocalDateTime.now();
+		lastQuarter();
+	}
 
-		System.out.println(date.getHour());
-		System.out.println(date.getMinute());
-		System.out.println(Math.ceil((double) date.getMinute() / 15.0) + "");
-
-//		LocalDateTime localDate =
-//			    LocalDateTime.ofInstant(Instant.ofEpochMilli(longValue), ZoneId.systemDefault());
-		Date now = new Date();
-//		now.getTime();
-//		long ut3 = now.getTime() / (1000L * 1000 * 60 * 60);
-//		System.out.println(now.getTime());
-
-		Date now2 = new Date(1599937677717l);
-		System.out.println(now2);
-		long ut3 = now2.getMinutes();
-		System.out.println((int) Math.ceil((double) ut3 / 15.0));
+	private static void lastQuarter() {
+		LocalDateTime time = LocalDateTime.parse("2020-09-19T15:30:59");
+		// LocalDateTime time = LocalDateTime.now();
+		System.out.println("currentTime " + time);
+		
+		LocalDateTime lastQuarter = time.truncatedTo(ChronoUnit.HOURS).plusMinutes(15 * (time.getMinute() / 15));
+		System.out.println("lastQuarter " + lastQuarter);
+		
+		Instant instant = lastQuarter.atZone(ZoneId.systemDefault()).toInstant();
+		long timeInMillis = instant.toEpochMilli();
+		System.out.println("lastquarter in millis " + timeInMillis);
 	}
 }
