@@ -14,7 +14,7 @@ import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
 
 public class HiveUtils {
-	
+
 	public static void loadLocalFileToStagingTable(String file) throws ClassNotFoundException, SQLException {
 		Map<Long, List<String>> map = new HashMap<>();
 		try {
@@ -37,8 +37,12 @@ public class HiveUtils {
 					val.add(String.join(",", row));
 					map.put(lastQuarter, val);
 				}
-				System.out.println();
 			}
+			//print map
+			map.forEach((k, v) -> {
+				System.out.println("key : " + k);
+				v.forEach(System.out::println);
+			});
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
