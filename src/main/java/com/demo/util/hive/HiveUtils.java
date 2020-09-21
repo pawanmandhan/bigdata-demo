@@ -1,25 +1,47 @@
 package com.demo.util.hive;
 
-import static com.demo.constant.QueryConstants.STAGING_TABLE_NAME;
+import static com.demo.constant.FileLocationConstants.INPUT_DIRECTORY_PATH;
 
+import java.io.FileReader;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-import com.demo.util.query.QueryUtil;
+import com.demo.util.PartitionUtil;
+import com.opencsv.CSVReader;
+import com.opencsv.CSVReaderBuilder;
 
 public class HiveUtils {
+	
+	public static void loadLocalFileToStagingTable(String file) throws ClassNotFoundException, SQLException {
+		Map<Long, List<String>> map = new HashMap<>();
+		try {
+			FileReader filereader = new FileReader(INPUT_DIRECTORY_PATH + file);
 
-	public static void loadLocalFileToStagingTable(String fileName) throws ClassNotFoundException, SQLException {
-		String LOAD_DATA_QUERY = QueryUtil.getLoadLocalFileToStagingQuery(fileName, STAGING_TABLE_NAME);
-		System.out.println("sql to be executed : " + LOAD_DATA_QUERY);
-		HiveConnectionUtil.getConnection().createStatement().execute(LOAD_DATA_QUERY);
-		System.out.println("Loaded data into the table successfully");
+			CSVReader csvReader = new CSVReaderBuilder(filereader)
+					// .withSkipLines(1)
+					.build();
+
+			List<String[]> allData = csvReader.readAll();
+
+			// print Data
+			for (String[] row : allData) {
+				Long lastQuarter = PartitionUtil.lastQuarter(Long.valueOf(row[1]));
+				List<String> list = map.get(lastQuarter);
+				if (list != null) {
+					list.add(String.join(",", row));
+				} else {
+					List<String> val = new ArrayList<>();
+					val.add(String.join(",", row));
+					map.put(lastQuarter, val);
+				}
+				System.out.println();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
-
-//	public void createUsageTable() throws ClassNotFoundException, SQLException {
-//		final String CREATE_TABLE_QUERY = QueryUtil.getCreateTableQuery(QueryConstants.LEVEL1_TABLE);
-//		System.out.println("load data sql to be executed : " + CREATE_TABLE_QUERY);
-//		HiveConnectionUtil.getConnection().createStatement().execute(CREATE_TABLE_QUERY);
-//		System.out.println("Loaded data into the table successfully");
-//	}
 
 }
