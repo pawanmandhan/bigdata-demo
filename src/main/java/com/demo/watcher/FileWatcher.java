@@ -20,7 +20,7 @@ public class FileWatcher {
 		while ((key = watchService.take()) != null) {
 			for (WatchEvent<?> event : key.pollEvents()) {
 				String fileNameInLFS = event.context().toString();
-				System.out.println("new file to be loaded in staging_table " + fileNameInLFS);
+				System.out.println("new file to be loaded from staging_table " + fileNameInLFS);
 				HiveUtils.loadLocalFileToStagingTable(fileNameInLFS);
 			}
 			key.reset();
